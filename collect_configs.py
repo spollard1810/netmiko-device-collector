@@ -22,6 +22,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
 
+import paramiko
 from netmiko import ConnectHandler, SSHDetect
 from netmiko.exceptions import (
     NetmikoAuthenticationException,
@@ -107,6 +108,12 @@ def collect(ip: str, username: str, password: str, secret: str) -> tuple[str, st
         return ip, "FAILED - authentication error"
     except NetmikoTimeoutException:
         return ip, "FAILED - connection timed out"
+    except paramiko.ssh_exception.SSHException as exc:
+        if "incompatible ssh peer" in str(exc).lower():
+            return ip, (f"FAILED - {exc} (device only offers legacy SSH algorithms; "
+                        f"installed paramiko {paramiko.__version__} - run: "
+                        f"pip install \"paramiko>=3.5.1,<4.0\")")
+        return ip, f"FAILED - SSHException: {exc}"
     except Exception as exc:
         return ip, f"FAILED - {type(exc).__name__}: {exc}"
 

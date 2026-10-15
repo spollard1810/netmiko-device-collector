@@ -1,1 +1,5 @@
 netmiko>=4.3.0
+# paramiko 4.x dropped ssh-dss; 5.x dropped ssh-rsa and SHA1 key exchange
+# (diffie-hellman-group1/group14-sha1). Older switches/routers need these,
+# otherwise you get "Incompatible ssh peer (no acceptable kex algorithm)".
+paramiko>=3.5.1,<4.0

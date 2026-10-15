@@ -28,3 +28,11 @@ You'll be prompted for username, password, and an optional enable secret.
 5. Writes `output/_summary.txt` listing success/failure per device.
 
 The `output/` folder is created automatically and is git-ignored, as is `ips.txt`, so configs and device lists don't get committed.
+
+## Troubleshooting
+
+**`Incompatible ssh peer (no acceptable kex algorithm)`** — the device only speaks older SSH algorithms (`diffie-hellman-group1/14-sha1`, `ssh-rsa`, `ssh-dss`). Newer paramiko releases removed these entirely: ssh-dss in 4.x, SHA1 key exchange and ssh-rsa in 5.x. `requirements.txt` pins paramiko 3.x for this reason; if you installed earlier, run:
+
+```bash
+pip install "paramiko>=3.5.1,<4.0"
+```
