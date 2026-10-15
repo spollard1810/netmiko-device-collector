@@ -1,0 +1,6 @@
+output/
+ips.txt
+__pycache__/
+*.pyc
+.venv/
+venv/
